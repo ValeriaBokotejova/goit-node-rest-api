@@ -6,7 +6,7 @@ import { nanoid } from "nanoid";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const contactsPath = path.join(__dirname, "db", "contacts.json");
+const contactsPath = path.join(__dirname, "..", "db", "contacts.json");
 
 /* ------ helpers ------ */
 async function readContacts() {
@@ -19,16 +19,16 @@ async function writeContacts(contacts) {
 }
 /* ---------------------- */
 
-export async function listContacts() {
+async function listContacts() {
   return await readContacts();
 }
 
-export async function getContactById(contactId) {
+async function getContactById(contactId) {
   const contacts = await readContacts();
   return contacts.find((c) => c.id === String(contactId)) ?? null;
 }
 
-export async function removeContact(contactId) {
+async function removeContact(contactId) {
   const contacts = await readContacts();
   const idx = contacts.findIndex((c) => c.id === String(contactId));
   if (idx === -1) return null;
@@ -37,13 +37,34 @@ export async function removeContact(contactId) {
   return removed;
 }
 
-export async function addContact(name, email, phone) {
+async function addContact(name, email, phone) {
   const contacts = await readContacts();
   const newContact = {
     id: nanoid(),
-    name, email, phone,
+    name,
+    email,
+    phone,
   };
   contacts.push(newContact);
   await writeContacts(contacts);
   return newContact;
 }
+
+async function updateContact(contactId, data) {
+  const contacts = await readContacts();
+  const idx = contacts.findIndex((c) => c.id === String(contactId));
+  if (idx === -1) return null;
+
+  const updated = { ...contacts[idx], ...data };
+  contacts[idx] = updated;
+  await writeContacts(contacts);
+  return updated;
+}
+
+export default {
+  listContacts,
+  getContactById,
+  removeContact,
+  addContact,
+  updateContact,
+};
