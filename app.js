@@ -6,6 +6,21 @@ import contactsRouter from "./routes/contactsRouter.js";
 
 const app = express();
 
+app.get("/", (_, res) => {
+  res.type("html").send(`
+    <style>body{font-family:system-ui;padding:24px;line-height:1.5}</style>
+    <h1>goit-node-rest-api</h1>
+    <p>API is running. Try:</p>
+    <ul>
+      <li><code>GET /api/contacts</code></li>
+      <li><code>GET /api/contacts/:id</code></li>
+      <li><code>POST /api/contacts</code></li>
+      <li><code>PUT /api/contacts/:id</code></li>
+      <li><code>DELETE /api/contacts/:id</code></li>
+    </ul>
+  `);
+});
+
 app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
