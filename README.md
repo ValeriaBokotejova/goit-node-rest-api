@@ -1,6 +1,7 @@
-# Auth (JWT) + PostgreSQL
+# Contacts REST API - Avatars
 
-Adds user authentication/authorization with JWT on top of the contacts API
+Adds user avatars to the auth-enabled API: Gravatar on registration + file upload via Multer.
+Stack: Node.js, Express, PostgreSQL, Sequelize, Joi, bcryptjs, jsonwebtoken, multer, gravatar
 
 ### Environment
 
@@ -16,7 +17,7 @@ npm run dev
 npm start
 ```
 
-### Auth Endpoints
+### Endpoints (auth-related)
 
 **Base:** http://localhost:3000/api/auth
 
@@ -36,27 +37,27 @@ Errors: 400 (validation), 401 { "message":"Email or password is wrong" }
 - POST /logout (Bearer)
 → 204 No Content (token cleared)
 
-- (optional) PATCH /subscription (Bearer)
-Body: { "subscription": "starter|pro|business" } → 200 { email, subscription }
+- PATCH /avatars (Bearer, multipart/form-data) → 200 { "avatarURL": "/avatars/<file>" }
 
+### Quick checks
 
-### Contacts (protected)
+**Static**
 
-**Base URL:** http://localhost:3000/api/contacts
+Put an image into public/avatars/test.png → open
+http://localhost:3000/avatars/test.png (should load 🖼️)
 
-- GET /api/contacts → 200 Array of contacts
+**Postman upload**
 
-- GET /api/contacts/:id → 200 Contact or 404 { "message": "Not found" }
+1. Login → copy token.
 
-- POST /api/contacts → 201 Created contact
-Body (JSON, required): { "name", "email", "phone" } (+ optional "favorite")
+2. PATCH http://localhost:3000/api/auth/avatars
 
-- PUT /api/contacts/:id → 200 Updated contact
-Body must have at least one of: name|email|phone|favorite
-Empty body → 400 { "message": "Body must have at least one field" }
+    - Auth → Bearer Token
 
-- PATCH /api/contacts/:id/favorite → 200 Updated contact
-Body: { "favorite": true|false } (required)
+    - Body → form-data → Key: avatar (type File), choose an image
 
-- DELETE /api/contacts/:id → 200 Deleted contact or 404
+3. Response:
 
+```json
+{ "avatarURL": "/avatars/<userId>_<timestamp>.png" }
+```

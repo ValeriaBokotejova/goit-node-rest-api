@@ -20,6 +20,7 @@ app.get("/", (_, res) => {
 // Routes
 app.use("/api/auth", authRouter);
 app.use("/api/contacts", contactsRouter);
+app.use(express.static("public"));
 
 // 404
 app.use((_, res) => {
