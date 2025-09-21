@@ -1,6 +1,6 @@
-# PostgreSQL + Sequelize
+# Auth (JWT) + PostgreSQL
 
-REST API for managing contacts using Node.js + Express, PostgreSQL, and Sequelize
+Adds user authentication/authorization with JWT on top of the contacts API
 
 ### Environment
 
@@ -16,7 +16,31 @@ npm run dev
 npm start
 ```
 
-### Endpoints
+### Auth Endpoints
+
+**Base:** http://localhost:3000/api/auth
+
+- POST /register
+Body: { "email": "a@b.c", "password": "secret123" }
+→ 201 { "user": { "email", "subscription":"starter" } }
+Conflicts: 409 { "message":"Email in use" }
+
+- POST /login
+Body: { "email", "password" }
+→ 200 { "token", "user": { "email", "subscription" } }
+Errors: 400 (validation), 401 { "message":"Email or password is wrong" }
+
+- GET /current (requires Bearer <token>)
+→ 200 { "email", "subscription" } or 401 { "message":"Not authorized" }
+
+- POST /logout (Bearer)
+→ 204 No Content (token cleared)
+
+- (optional) PATCH /subscription (Bearer)
+Body: { "subscription": "starter|pro|business" } → 200 { email, subscription }
+
+
+### Contacts (protected)
 
 **Base URL:** http://localhost:3000/api/contacts
 

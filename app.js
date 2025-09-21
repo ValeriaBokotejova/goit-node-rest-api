@@ -4,6 +4,7 @@ import cors from "cors";
 
 import { connectDB } from "./db/sequelize.js";
 import contactsRouter from "./routes/contactsRouter.js";
+import authRouter from "./routes/authRouter.js";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.get("/", (_, res) => {
 });
 
 // Routes
+app.use("/api/auth", authRouter);
 app.use("/api/contacts", contactsRouter);
 
 // 404
