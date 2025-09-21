@@ -5,6 +5,8 @@ import { registerSchema, loginSchema, updateSubscriptionSchema } from "../schema
 import authenticate from "../middlewares/authenticate.js";
 import upload from "../middlewares/upload.js";
 import { updateAvatar } from "../controllers/authControllers.js";
+import { verifyEmail, resendVerifyEmail } from "../controllers/authControllers.js";
+import { resendVerifySchema } from "../schemas/authSchemas.js";
 
 const router = express.Router();
 
@@ -19,5 +21,9 @@ router.get("/current", authenticate, current);
 router.patch("/subscription", authenticate, validateBody(updateSubscriptionSchema), updateSubscription);
 
 router.patch("/avatars", authenticate, upload.single("avatar"), updateAvatar);
+
+router.get("/verify/:verificationToken", verifyEmail);
+
+router.post("/verify", validateBody(resendVerifySchema), resendVerifyEmail);
 
 export default router;
